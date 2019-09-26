@@ -5,6 +5,7 @@ use std::thread;
 use std::time::Duration;
 
 //use simple_server::ThreadPool;
+mod lib;
 
 fn main() {
 	let listener = TcpListener::bind("192.168.1.31:7878").unwrap();
@@ -28,6 +29,8 @@ fn handle_connection(mut stream: TcpStream) {
 	let get = b"GET / HTTP/1.1\r\n";
 	let sleep = b"GET /sleep HTTP/1.1\r\n";
 
+	println!("We read: {:?}", parse_http_request(&));
+
 	let (status_line, filename) = if buffer.starts_with(get) {
         ("HTTP/1.1 200 OK\r\n\r\n", "html/hello.html")
     } else if buffer.starts_with(sleep) {
@@ -42,4 +45,26 @@ fn handle_connection(mut stream: TcpStream) {
 
     stream.write(response.as_bytes()).unwrap();
     stream.flush().unwrap();
+}
+
+fn parse_http_request(request: &String) -> String {
+
+}
+
+struct HttpRequest {
+	method: HttpMethod,
+	params: String,
+	agent: String,
+}
+
+enum HttpMethod {
+	GET,
+	HEAD,
+	POST,
+	PUT,
+	DELETE,
+	CONNECT,
+	OPTIONS,
+	TRACE,
+	PATCH,
 }
