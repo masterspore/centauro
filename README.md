@@ -8,7 +8,7 @@
 # To-Do
 
 Prioritat alta:
-- [x] Funcionalitat bàsica -> Acabar HttpRequest
+- [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [ ] Documentació i definir estàndards de programació.
 
 Prioritat mitja:
