@@ -8,17 +8,17 @@
 # To-Do
 
 Prioritat alta:
-- Funcionalitat bàsica -> Acabar HttpRequest
-- Documentació i definir estàndards de programació.
+- [x] Funcionalitat bàsica -> Acabar HttpRequest
+- [ ] Documentació i definir estàndards de programació.
 
 Prioritat mitja:
-- Unit tests & integration tests
-- Implementació multifil del servidor
-- Organitzar carpetes del servidor
+- [ ] Unit tests & integration tests
+- [ ] Implementació multifil del servidor -> *Jan*
+- [ ] Organitzar carpetes del servidor
 
 Prioritat baixa:
-- Comprar domini
-- Implementar DNS dinàmic (Cloudflare?)
+- [ ] Comprar domini
+- [ ] Implementar DNS dinàmic (Cloudflare?)
 
 # Recomnanacions pel codi:
 És important comentar cada funció què fa. També s'han d'implementar unit tests i tests d'integració.

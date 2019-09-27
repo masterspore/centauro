@@ -49,27 +49,51 @@ fn handle_connection(mut stream: TcpStream) {
 	}
 
 	if success_reading_request {
-		println!("Raw request: {}", &request);
+		let http_request = http::parse_http_request(&request).unwrap();
 
-		let get = b"GET / HTTP/1.1\r\n";
-		let sleep = b"GET /sleep HTTP/1.1\r\n";
+		match http_request.method {
+			http::HttpMethod::GET => process_get_request(&http_request, stream),
+			_ => (),
+		}
+	}
+}
 
-		println!("We read: {:?}", http::Http::parse_http_request(&request));
+fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
+	let mut filename = String::from("/404.html");
+	let mut status_line = String::from("");
 
-		let (status_line, filename) = if buffer.starts_with(get) {
-	        ("HTTP/1.1 200 OK\r\n\r\n", "html/hello.html")
-	    } else if buffer.starts_with(sleep) {
-	    	thread::sleep(Duration::from_secs(5));
-	    	("HTTP/1.1 200 OK\r\n\r\n", "html/hello.html")
-	    } else {
-	        ("HTTP/1.1 404 NOT FOUND\r\n\r\n", "html/404.html")
-	    };
-
-	    let contents = fs::read_to_string(filename).unwrap();
-	    let response = format!("{}{}", status_line, contents);
-
-	    stream.write(response.as_bytes()).unwrap();
+	match file_in_whitelist(&request.params) {
+		Ok(file) => {
+			filename = file;
+			status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
+		},
+		Err(e) => {
+			filename = String::from("/404.html");
+			status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
+		},
 	}
 
-    stream.flush().unwrap();
+	filename = format!("html{}", filename);
+	println!("filename: {:?}", filename);
+
+	let contents = fs::read_to_string(filename).unwrap();
+	let response = format!("{}{}", status_line, contents);
+
+	stream.write(response.as_bytes()).unwrap();
+	stream.flush().unwrap();
+}
+
+fn file_in_whitelist (param: &String) -> Result<String, http::HttpError> {
+	let whitelist_file = fs::read_to_string("html/_whitelist.txt").unwrap();
+	let whitelist: Vec<&str> = whitelist_file.lines().collect();
+
+	println!("whitelist: {:?}", whitelist);
+
+	if param == "/" { return Ok(String::from("/hello.html")); }
+
+	for file in &whitelist {
+		if file == param { return Ok(param.to_string()) }
+	}
+
+	Err(http::HttpError::new("File not found", param))
 }
