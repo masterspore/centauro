@@ -19,6 +19,9 @@ pub mod Http {
 		let request: Vec<&str> = lines[0].split_whitespace().collect();
 		println!("Request: {:?}", request);
 
+		let method = get_method_from_str(request[0]);
+		println!("Method: {:?}", method);
+
 		Ok(HttpRequest {
 			method: HttpMethod::GET,
 			params: request[1].to_string(),
@@ -26,6 +29,21 @@ pub mod Http {
 			agent: " ".to_string(),
 			host: Host {ip: " ".to_string(), port: " ".to_string()},
 		})
+	}
+
+	fn get_method_from_str(&method: str) -> HttpMethod {
+		match method {
+			"GET" => return HttpMethod::GET,
+			"HEAD" => return HttpMethod::HEAD,
+			"POST" => return HttpMethod::POST,
+			"PUT" => return HttpMethod::PUT,
+			"DELETE" => return HttpMethod::DELETE,
+			"CONNECT" => return HttpMethod::CONNECT,
+			"OPTIONS" => return HttpMethod::OPTIONS,
+			"TRACE" => return HttpMethod::TRACE,
+			"PATCH" => return HttpMethod::PATCH,
+			_ => return HttpMethod::NONE,
+		}
 	}
 
 	#[derive(Debug)]
@@ -54,6 +72,7 @@ pub mod Http {
 		OPTIONS,
 		TRACE,
 		PATCH,
+		NONE,
 	}
 
 	// Errors must implement:
