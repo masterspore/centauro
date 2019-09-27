@@ -17,21 +17,37 @@ pub mod Http {
 		let lines: Vec<&str> = request.lines().collect(); // This returns a vector with each line unwrapped from Option
 
 		let request: Vec<&str> = lines[0].split_whitespace().collect();
-		println!("Request: {:?}", request);
-
 		let method = get_method_from_str(request[0]);
-		println!("Method: {:?}", method);
+
+		let mut host = Host {ip: " ".to_string(), port: " ".to_string()};
+		let mut agent = " ".to_string();
+
+		// In case the other parameters are not ordered, we match them
+		// Also, pattern matching allows for easier code upgrades
+		for line in &lines { 
+			let line_vec: Vec<&str> = line.split_whitespace().collect();
+			if line_vec.len() > 0 {
+				match line_vec[0] {
+					"Host:" => {
+						let full: Vec<&str> = line_vec[1].split(":").collect();
+						host = Host {ip: full[0].to_string(), port: full[1].to_string()};
+					},
+					"User-Agent:" => agent = line_vec[1].to_string(),
+					_ => (),
+				}
+			}
+		}
 
 		Ok(HttpRequest {
-			method: HttpMethod::GET,
+			method: method,
 			params: request[1].to_string(),
-			version: " ".to_string(),
-			agent: " ".to_string(),
-			host: Host {ip: " ".to_string(), port: " ".to_string()},
+			version: request[2].to_string(),
+			agent: agent,
+			host: host,
 		})
 	}
 
-	fn get_method_from_str(&method: str) -> HttpMethod {
+	fn get_method_from_str(method: &str) -> HttpMethod {
 		match method {
 			"GET" => return HttpMethod::GET,
 			"HEAD" => return HttpMethod::HEAD,
