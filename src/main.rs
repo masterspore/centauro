@@ -21,7 +21,7 @@ use std::fmt;
 //use simple_server::ThreadPool;
 
 fn main() {
-	let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+	let listener = TcpListener::bind("192.168.1.35:7878").unwrap();
 	//let pool = ThreadPool::new(4);
 
 	for stream in listener.incoming() {
@@ -32,6 +32,12 @@ fn main() {
 		//});
 	}
 }
+
+/*
+Handles the TcpStream provided by the main function. After trying to read the request,
+it derives the HttpRequest to the corresponding function, based on the method of the
+request.
+*/
 
 fn handle_connection(mut stream: TcpStream) {
 	let mut buffer = [0; 512];
@@ -58,6 +64,12 @@ fn handle_connection(mut stream: TcpStream) {
 	}
 }
 
+/*
+Takes the client's TcpStream and their request, if it's a GET. The function
+returns the file that's being asked for, if it exists in the whitelist.
+Otherwise, it returns a 404 for security reasons.
+*/
+
 fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
 	let mut filename = String::from("/404.html");
 	let mut status_line = String::from("");
@@ -82,6 +94,12 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
 	stream.write(response.as_bytes()).unwrap();
 	stream.flush().unwrap();
 }
+
+/*
+Checks whether the file that's being asked for in a GET request is accessible.
+The whitelist file can be modified by administrators, and '/' returns the
+index page.
+*/
 
 fn file_in_whitelist (param: &String) -> Result<String, http::HttpError> {
 	let whitelist_file = fs::read_to_string("html/_whitelist.txt").unwrap();

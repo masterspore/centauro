@@ -12,6 +12,10 @@ Connection: --
 Upgrade-Insecure-Requests: --
 */
 
+/* 
+Returns an HttpRequest with the parsed data provided by the client.
+*/ 
+
 pub fn parse_http_request(request: &String) -> Result<HttpRequest, HttpError> {
 	let lines: Vec<&str> = request.lines().collect(); // This returns a vector with each line unwrapped from Option
 

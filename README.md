@@ -9,11 +9,12 @@
 
 Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
+- [ ] Implementació multifil del servidor -> *Jan*
+- [ ] Implementar loggers
 - [ ] Documentació i definir estàndards de programació.
 
 Prioritat mitja:
 - [ ] Unit tests & integration tests
-- [ ] Implementació multifil del servidor -> *Jan*
 - [ ] Organitzar carpetes del servidor
 
 Prioritat baixa:
