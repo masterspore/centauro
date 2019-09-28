@@ -10,26 +10,25 @@ use std::borrow::Cow;
 // Network
 use std::net::{TcpListener, TcpStream};
 
-// Threading
-use std::thread;
-use std::time::Duration;
-
-// Error handling
-use std::error::Error;
-use std::fmt;
-
-//use simple_server::ThreadPool;
 
 fn main() {
-	let listener = TcpListener::bind("192.168.1.35:7878").unwrap();
-	//let pool = ThreadPool::new(4);
+	let address = String::from("127.0.0.1:7878");
+	println!("Booting server at address: {}", address);
 
+	let listener = TcpListener::bind(&address).unwrap();
+	let pool = lib::ThreadPool::new(4);
+
+	println!("Successfully booted server.");
+
+	// listener.incoming() returns an iterator, but instead of being static, it
+	// gets a new stream inside every time a new connection is made. 
+	// (The iterator has no 'Close' (or something similar), but a 'None'?)
 	for stream in listener.incoming() {
 		let stream = stream.unwrap();
 
-		//pool.execute(|| {
+		pool.execute(|| {
 			handle_connection(stream);
-		//});
+		});
 	}
 }
 
@@ -51,7 +50,7 @@ fn handle_connection(mut stream: TcpStream) {
 			request.push_str(req);
 			success_reading_request = true;
 		},
-		Cow::Owned(new) => println!("There was something wrong reading the request"),
+		Cow::Owned(_new) => println!("There was something wrong reading the request"),
 	}
 
 	if success_reading_request {
@@ -72,17 +71,14 @@ Otherwise, it returns a 404 for security reasons.
 
 fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
 	let mut filename = String::from("/404.html");
-	let mut status_line = String::from("");
+	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
 
 	match file_in_whitelist(&request.params) {
 		Ok(file) => {
 			filename = file;
 			status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
 		},
-		Err(e) => {
-			filename = String::from("/404.html");
-			status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
-		},
+		_ => (),
 	}
 
 	filename = format!("html{}", filename);
