@@ -1,6 +1,8 @@
 // Module imports
 mod http;
 mod lib;
+mod config;
+mod logger;
 
 // System I/O
 use std::fs;
@@ -12,11 +14,18 @@ use std::net::{TcpListener, TcpStream};
 
 
 fn main() {
-	let address = String::from("127.0.0.1:7878");
-	println!("Booting server at address: {}", address);
+	println!("Booting server...");
 
+	let config_file = config::load_config("config.ini").unwrap();
+	println!("Config file: {:?}", config_file);
+
+	let address = format!("{}:{}", config_file.get("ip_address").unwrap(), config_file.get("port").unwrap());
 	let listener = TcpListener::bind(&address).unwrap();
-	let pool = lib::ThreadPool::new(4);
+	println!("Address to be used: {}", address);
+
+	let tp_size: usize = config_file.get("thread_pool_size").unwrap().parse().unwrap();
+	let pool = lib::ThreadPool::new(tp_size);
+	println!("Thread pool of size {} created.", tp_size);
 
 	println!("Successfully booted server.");
 
@@ -82,7 +91,7 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
 	}
 
 	filename = format!("html{}", filename);
-	println!("filename: {:?}", filename);
+	println!("Returning file: {:?}", filename);
 
 	let contents = fs::read_to_string(filename).unwrap();
 	let response = format!("{}{}", status_line, contents);
@@ -100,8 +109,6 @@ index page.
 fn file_in_whitelist (param: &String) -> Result<String, http::HttpError> {
 	let whitelist_file = fs::read_to_string("html/_whitelist.txt").unwrap();
 	let whitelist: Vec<&str> = whitelist_file.lines().collect();
-
-	println!("whitelist: {:?}", whitelist);
 
 	if param == "/" { return Ok(String::from("/hello.html")); }
 
