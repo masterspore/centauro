@@ -1,3 +1,4 @@
 /hello.html
 /404.html
 /home.html
+/izar.css
