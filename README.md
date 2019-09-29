@@ -11,14 +11,14 @@
 Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [x] ~~Implementació multifil del servidor~~
-- [ ] Implementar loggers
+- [ ] Implementar loggers -> **Jan**
 - [ ] Documentació i definir estàndards de programació.
 
 Prioritat mitja:
 - [ ] Entendre el codi de threading
 - [ ] Unit tests & integration tests
 - [ ] Organitzar carpetes del servidor
-- [ ] Afegir funcionalitat per a fer servir un arxiu de configuració -> *Jan*
+- [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
 
 Prioritat baixa:
 - [ ] Comprar domini
