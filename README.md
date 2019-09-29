@@ -5,6 +5,7 @@
 - Gestió de memòria: https://deterministic.space/secret-life-of-cows.html
 - Mòduls: https://stevedonovan.github.io/rust-gentle-intro/4-modules.html
 - El codi de concurrència (lib.rs) està tret d'aquí: https://doc.rust-lang.org/book/ch20-02-multithreaded.html
+- Estàndard dels arxius de log (ELF): https://www.w3.org/TR/WD-logfile.html
 
 # To-Do
 
