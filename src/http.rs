@@ -25,6 +25,19 @@ pub fn parse_http_request(request: &String) -> Result<HttpRequest, HttpError> {
 	let mut host = Host {ip: " ".to_string(), port: " ".to_string()};
 	let mut agent = " ".to_string();
 
+	// FIX THIS
+	let params = if request.len() > 2 {
+		request[1].to_string()
+	} else {
+		" ".to_string()
+	};
+	
+	let version = if request.len() > 3 {
+		request[2].to_string()
+	} else {
+		" ".to_string()
+	};
+
 	// In case the other parameters are not ordered, we match them
 	// Also, pattern matching allows for easier code upgrades
 	for line in &lines { 
@@ -33,7 +46,7 @@ pub fn parse_http_request(request: &String) -> Result<HttpRequest, HttpError> {
 			match line_vec[0] {
 				"Host:" => {
 					let full: Vec<&str> = line_vec[1].split(":").collect();
-					host = Host {ip: full[0].to_string(), port: full[1].to_string()};
+					if full.len() >= 2 { host = Host {ip: full[0].to_string(), port: full[1].to_string()}; }
 				},
 				"User-Agent:" => agent = line_vec[1].to_string(),
 				_ => (),
@@ -42,11 +55,11 @@ pub fn parse_http_request(request: &String) -> Result<HttpRequest, HttpError> {
 	}
 
 	Ok(HttpRequest {
-		method: method,
-		params: request[1].to_string(),
-		version: request[2].to_string(),
-		agent: agent,
-		host: host,
+		method,
+		params,
+		version,
+		agent,
+		host,
 	})
 }
 

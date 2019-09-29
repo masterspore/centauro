@@ -12,6 +12,7 @@
 Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [x] ~~Implementació multifil del servidor~~
+- [x] Arreglar http.rs, que el parser tiri
 - [ ] Implementar loggers -> **Jan**
 - [ ] Documentació i definir estàndards de programació.
 

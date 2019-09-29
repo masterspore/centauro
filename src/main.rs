@@ -12,7 +12,6 @@ use std::borrow::Cow;
 // Network
 use std::net::{TcpListener, TcpStream};
 
-
 fn main() {
 	println!("Booting server...");
 
@@ -110,7 +109,7 @@ fn file_in_whitelist (param: &String) -> Result<String, http::HttpError> {
 	let whitelist_file = fs::read_to_string("html/_whitelist.txt").unwrap();
 	let whitelist: Vec<&str> = whitelist_file.lines().collect();
 
-	if param == "/" { return Ok(String::from("/hello.html")); }
+	if param == "/" { return Ok("/index.html".to_string()); }
 
 	for file in &whitelist {
 		if file == param { return Ok(param.to_string()) }
