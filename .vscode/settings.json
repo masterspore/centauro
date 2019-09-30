@@ -1,0 +1,10 @@
+{
+    "sass_autocompile.targetDir": "public/",
+    "easysass.targetDir": "public/",
+    "easysass.formats": [
+        {
+            "format": "compressed",
+            "extension": ".min.css"
+        }
+    ]
+}
