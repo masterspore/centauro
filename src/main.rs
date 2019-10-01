@@ -63,9 +63,11 @@ fn handle_connection(mut stream: TcpStream) {
 
 	if success_reading_request {
 		let http_request = http::parse_http_request(&request).unwrap();
+		println!("{:?}", http_request);
 
 		match http_request.method {
-			http::HttpMethod::GET => process_get_request(&http_request, stream),
+			http::HttpMethod::GET => process_get_request(&http_request, stream, false),
+			http::HttpMethod::HEAD => process_get_request(&http_request, stream, true),
 			_ => (),
 		}
 	}
@@ -77,7 +79,7 @@ returns the file that's being asked for, if it exists in the whitelist.
 Otherwise, it returns a 404 for security reasons.
 */
 
-fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
+fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_head: bool) {
 	let mut filename = String::from("/404.html");
 	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
 
@@ -93,7 +95,7 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream) {
 	println!("Returning file: {:?}", filename);
 
 	let contents = fs::read_to_string(filename).unwrap();
-	let response = format!("{}{}", status_line, contents);
+	let response = if is_head { status_line } else { format!("{}{}", status_line, contents) };
 
 	stream.write(response.as_bytes()).unwrap();
 	stream.flush().unwrap();

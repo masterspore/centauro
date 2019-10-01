@@ -12,18 +12,19 @@
 Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [x] ~~Implementació multifil del servidor~~
-- [x] Arreglar http.rs, que el parser tiri
-- [ ] Implementar loggers -> **Jan**
-- [ ] Documentació i definir estàndards de programació.
+- [x] ~~Arreglar http.rs, que el parser tiri~~
+- [ ] Llegir RFC7231 i acabar http.rs -> **Jan**
+- [ ] Implementar loggers
 
 Prioritat mitja:
+- [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
 - [ ] Entendre el codi de threading
 - [ ] Unit tests & integration tests
 - [ ] Organitzar carpetes del servidor
-- [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
+- [ ] Documentació i definir estàndards de programació.
 
 Prioritat baixa:
-- [ ] Comprar domini
+- [x] ~~Comprar domini~~
 - [ ] Implementar DNS dinàmic (Cloudflare?)
 
 # Recomnanacions pel codi:
