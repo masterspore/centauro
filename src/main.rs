@@ -63,7 +63,7 @@ fn handle_connection(mut stream: TcpStream) {
 
 	if success_reading_request {
 		let http_request = http::parse_http_request(&request).unwrap();
-		println!("{:?}", http_request);
+		//println!("{:?}", http_request);
 
 		match http_request.method {
 			http::HttpMethod::GET => process_get_request(&http_request, stream, false),
@@ -83,7 +83,7 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_h
 	let mut filename = String::from("/404.html");
 	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
 
-	match file_in_whitelist(&request.params) {
+	match file_in_public_folder(&request.params) {
 		Ok(file) => {
 			filename = file;
 			status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
@@ -91,7 +91,7 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_h
 		_ => (),
 	}
 
-	filename = format!("html{}", filename);
+	filename = format!("public{}", filename);
 	println!("Returning file: {:?}", filename);
 
 	let contents = fs::read_to_string(filename).unwrap();
@@ -102,16 +102,35 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_h
 }
 
 /*
+Checks whether the file is accessible by everyone
+*/
+
+fn file_in_public_folder (param: &String) -> Result<String, http::HttpError> {
+	let files = fs::read_dir("public").unwrap();
+
+	if param == "/" { return Ok("/index.html".to_string()); }
+
+    for file in files {
+    	match file {
+    		Ok(f) => {
+    			if f.file_name().to_str() == Some(&param[1..]) { return Ok(param.to_string()); } // The [1..] is to exclude the '/'
+    		},
+    		Err(e) => (),
+    	}
+    }
+
+    Err(http::HttpError::new("File not found", param))
+}
+
+/*
 Checks whether the file that's being asked for in a GET request is accessible.
 The whitelist file can be modified by administrators, and '/' returns the
 index page.
 */
 
 fn file_in_whitelist (param: &String) -> Result<String, http::HttpError> {
-	let whitelist_file = fs::read_to_string("html/_whitelist.txt").unwrap();
+	let whitelist_file = fs::read_to_string("public/_whitelist.txt").unwrap();
 	let whitelist: Vec<&str> = whitelist_file.lines().collect();
-
-	if param == "/" { return Ok("/index.html".to_string()); }
 
 	for file in &whitelist {
 		if file == param { return Ok(param.to_string()) }
