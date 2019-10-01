@@ -68,6 +68,7 @@ fn handle_connection(mut stream: TcpStream) {
 		match http_request.method {
 			http::HttpMethod::GET => process_get_request(&http_request, stream, false),
 			http::HttpMethod::HEAD => process_get_request(&http_request, stream, true),
+			http::HttpMethod::POST => process_post_request(&http_request, stream),
 			_ => (),
 		}
 	}
@@ -75,66 +76,50 @@ fn handle_connection(mut stream: TcpStream) {
 
 /*
 Takes the client's TcpStream and their request, if it's a GET. The function
-returns the file that's being asked for, if it exists in the whitelist.
-Otherwise, it returns a 404 for security reasons.
+returns the file that's being asked for, if it exists.
+Otherwise, it returns a 404.
 */
 
 fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_head: bool) {
-	let mut filename = String::from("/404.html");
+	let mut file = fs::read_to_string(String::from("public/404.html")).unwrap();
 	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
 
-	match file_in_public_folder(&request.params) {
-		Ok(file) => {
-			filename = file;
-			status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
-		},
-		_ => (),
+	if request.params == "/".to_string() {
+		file = fs::read_to_string(String::from("public/index.html")).unwrap();
+	} else {
+		match fs::read_to_string(format!("public{}", request.params)) {
+			Ok(f) => {
+				status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
+				file = f;
+			},
+			Err(e) => (),
+		} 
 	}
 
-	filename = format!("public{}", filename);
-	println!("Returning file: {:?}", filename);
-
-	let contents = fs::read_to_string(filename).unwrap();
-	let response = if is_head { status_line } else { format!("{}{}", status_line, contents) };
+	let response = if is_head { status_line } else { format!("{}{}", status_line, file) };
 
 	stream.write(response.as_bytes()).unwrap();
 	stream.flush().unwrap();
 }
 
 /*
-Checks whether the file is accessible by everyone
+Takes a client's TCP stream and the POST request, then parses it.
 */
 
-fn file_in_public_folder (param: &String) -> Result<String, http::HttpError> {
-	let files = fs::read_dir("public").unwrap();
+fn process_post_request (request: &http::http_request, mut stream: TcpStream) {
+	let mut file = fs::read_to_string(String::from("public/404.html")).unwrap(); 
+	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
 
-	if param == "/" { return Ok("/index.html".to_string()); }
+	let payload: Vec<&str> = request.payload.split("&").collect();
 
-    for file in files {
-    	match file {
-    		Ok(f) => {
-    			if f.file_name().to_str() == Some(&param[1..]) { return Ok(param.to_string()); } // The [1..] is to exclude the '/'
-    		},
-    		Err(e) => (),
-    	}
-    }
+	match fs::read_to_string(format!("public{}", request.params)) {
+		Ok(f) => {
+			status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
+			file = f;
+		},
+		Err(e) => (),
+	} 
 
-    Err(http::HttpError::new("File not found", param))
-}
-
-/*
-Checks whether the file that's being asked for in a GET request is accessible.
-The whitelist file can be modified by administrators, and '/' returns the
-index page.
-*/
-
-fn file_in_whitelist (param: &String) -> Result<String, http::HttpError> {
-	let whitelist_file = fs::read_to_string("public/_whitelist.txt").unwrap();
-	let whitelist: Vec<&str> = whitelist_file.lines().collect();
-
-	for file in &whitelist {
-		if file == param { return Ok(param.to_string()) }
-	}
-
-	Err(http::HttpError::new("File not found", param))
+	stream.write(response.as_bytes()).unwrap();
+	stream.flush().unwrap();
 }
