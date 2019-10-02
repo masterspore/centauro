@@ -68,7 +68,7 @@ fn handle_connection(mut stream: TcpStream) {
 		match http_request.method {
 			http::HttpMethod::GET => process_get_request(&http_request, stream, false),
 			http::HttpMethod::HEAD => process_get_request(&http_request, stream, true),
-			http::HttpMethod::POST => process_post_request(&http_request, stream),
+			//http::HttpMethod::POST => process_post_request(&http_request, stream),
 			_ => (),
 		}
 	}
@@ -106,7 +106,8 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_h
 Takes a client's TCP stream and the POST request, then parses it.
 */
 
-fn process_post_request (request: &http::http_request, mut stream: TcpStream) {
+/*
+fn process_post_request (request: &http::HttpRequest, mut stream: TcpStream) {
 	let mut file = fs::read_to_string(String::from("public/404.html")).unwrap(); 
 	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
 
@@ -123,3 +124,4 @@ fn process_post_request (request: &http::http_request, mut stream: TcpStream) {
 	stream.write(response.as_bytes()).unwrap();
 	stream.flush().unwrap();
 }
+*/

@@ -27,6 +27,10 @@ Prioritat baixa:
 - [x] ~~Comprar domini~~
 - [ ] Implementar DNS dinàmic (Cloudflare?)
 
+# Instalació (Linux)
+
+1. 
+
 # Recomnanacions pel codi:
 És important comentar cada funció què fa. També s'han d'implementar unit tests i tests d'integració.
 
