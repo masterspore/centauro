@@ -29,7 +29,34 @@ Prioritat baixa:
 
 # Instalació (Linux)
 
-1. 
+1. Descarregar servidor: 
+'''
+git clone https://github.com/masterspore/centauro
+'''
+2. Instalar Rust: https://www.rust-lang.org/tools/install, i screen:
+'''
+curl https://sh.rustup.rs -sSf | sh
+sudo apt-get install screen
+'''
+3. Reinicia terminal
+4. Modifica config.ini amb els valors que vulguis (de moment cal adaptar la IP)
+5. Compila:
+'''
+cargo build
+'''
+6. Copia config.ini i /public:
+'''
+sudo cp config.ini ~/centauro/target/debug/
+sudo cp -r public ~/centauro/target/debug/
+'''
+7. Executar servidor:
+'''
+screen
+cd target/debug
+sudo ./simple_server &
+'''
+8. 'Ctrl+a' i després 'd' per deixar el servidor en segon pla i poguer sortir de la sessió de ssh
+9. Per agafar una altra vegada el control, 'Ctrl+a' 'r'
 
 # Recomnanacions pel codi:
 És important comentar cada funció què fa. També s'han d'implementar unit tests i tests d'integració.
