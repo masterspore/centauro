@@ -1,2 +1,4 @@
 /target
+/logs
+/.vscode
 **/*.rs.bk
