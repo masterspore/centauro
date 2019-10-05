@@ -13,8 +13,8 @@ Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [x] ~~Implementació multifil del servidor~~
 - [x] ~~Arreglar http.rs, que el parser tiri~~
-- [ ] Llegir RFC7231 i acabar http.rs -> **Jan**
-- [ ] Implementar loggers
+- [ ] Llegir RFC7231 i acabar http.rs
+- [ ] Implementar loggers -> **Jan**
 
 Prioritat mitja:
 - [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
@@ -57,6 +57,9 @@ sudo ./simple_server &
 '''
 8. 'Ctrl+a' i després 'd' per deixar el servidor en segon pla i poguer sortir de la sessió de ssh
 9. Per agafar una altra vegada el control, 'Ctrl+a' 'r'
+
+# Notes:
+- La compilació requereix internet si no tens les dependències instal·lades (es poden veure a Cargo.toml)
 
 # Recomnanacions pel codi:
 És important comentar cada funció què fa. També s'han d'implementar unit tests i tests d'integració.

@@ -2,7 +2,7 @@
 mod http;
 mod lib;
 mod config;
-mod logger;
+mod log;
 
 // System I/O
 use std::fs;
@@ -25,6 +25,9 @@ fn main() {
 	let tp_size: usize = config_file.get("thread_pool_size").unwrap().parse().unwrap();
 	let pool = lib::ThreadPool::new(tp_size);
 	println!("Thread pool of size {} created.", tp_size);
+
+	let logger = log::Logger::new();
+	println!("Initialized logger thread.");
 
 	println!("Successfully booted server.");
 
@@ -92,7 +95,7 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_h
 				status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
 				file = f;
 			},
-			Err(e) => (),
+			_ => (),
 		} 
 	}
 

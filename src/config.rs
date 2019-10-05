@@ -24,7 +24,7 @@ pub fn load_config(config: &str) -> Result<HashMap<String, String>, io::Error> {
 	};
 
 	let mut contents = String::new();
-	file.read_to_string(&mut contents);
+	file.read_to_string(&mut contents).unwrap();
 	let contents: Vec<&str> = contents.lines().collect();
 
 	for line in &contents {
