@@ -14,7 +14,6 @@ impl ThreadPool {
 	pub fn new(size: usize) -> ThreadPool {
 		assert!(size > 0);
 
-		println!("Creating thread pool...");
 		let (sender, reciever) = mpsc::channel();
 		let reciever = Arc::new(Mutex::new(reciever));
 		let mut workers = Vec::with_capacity(size);
@@ -53,7 +52,6 @@ impl Worker {
 		let thread = thread::spawn(move || {
 			loop {
 				let job = reciever.lock().unwrap().recv().unwrap();
-				println!("Worker {} got a job, executing.", id);
 				job.call_box();
 			}
 		});

@@ -1,6 +1,6 @@
 [package]
 name = "centauro_server"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Toni Bergas", "Jan-Bernat Roselló"]
 edition = "2018"
 

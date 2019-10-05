@@ -13,8 +13,8 @@ Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [x] ~~Implementació multifil del servidor~~
 - [x] ~~Arreglar http.rs, que el parser tiri~~
-- [ ] Llegir RFC7231 i acabar http.rs
-- [ ] Implementar loggers -> **Jan**
+- [ ] Afegir capacitat del servidor per a processar POST a scripts
+- [x] ~~Implementar loggers~~
 
 Prioritat mitja:
 - [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~

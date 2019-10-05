@@ -13,23 +13,19 @@ use std::borrow::Cow;
 use std::net::{TcpListener, TcpStream};
 
 fn main() {
-	println!("Booting server...");
-
 	let config_file = config::load_config("config.ini").unwrap();
-	println!("Config file: {:?}", config_file);
+	let logger = log::Logger::new(&config_file);
+	logger.log(log::LogLevel::INFO, "Booting server...");
 
 	let address = format!("{}:{}", config_file.get("ip_address").unwrap(), config_file.get("port").unwrap());
 	let listener = TcpListener::bind(&address).unwrap();
-	println!("Address to be used: {}", address);
+	logger.log(log::LogLevel::INFO, &format!("Address to be used: {}", address));
 
 	let tp_size: usize = config_file.get("thread_pool_size").unwrap().parse().unwrap();
 	let pool = lib::ThreadPool::new(tp_size);
-	println!("Thread pool of size {} created.", tp_size);
+	logger.log(log::LogLevel::DEBUG, &format!("Thread pool of size {} created.", tp_size));
 
-	let logger = log::Logger::new();
-	println!("Initialized logger thread.");
-
-	println!("Successfully booted server.");
+	logger.log(log::LogLevel::INFO, "Successfully booted server.");
 
 	// listener.incoming() returns an iterator, but instead of being static, it
 	// gets a new stream inside every time a new connection is made. 
