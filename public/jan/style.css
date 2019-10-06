@@ -1,0 +1,43 @@
+body {
+  background-color: #120d1c;
+  font-family: 'Roboto Mono', monospace;
+  color: #d6cce8;
+  margin: 50px;
+}
+
+h1 {
+  text-align: center;
+}
+
+/* Links */
+a:link {
+  color: #9a86c4;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #6f6e70;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #dfc6f7;
+  text-decoration: none;
+}
+
+a:active {
+  color: #82acd9;
+  text-decoration: none;
+}
+
+.menu {
+	width: 15%;
+	float: left;
+	text-align: right;
+	margin-right: 30px;
+}
+
+.main {
+	width: 85%;
+	float: right;
+}

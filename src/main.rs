@@ -90,14 +90,28 @@ fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_h
 
 	let peer_ip = stream.peer_addr().unwrap().ip();
 
+	let request_extension: Vec<&str> = request.params.split(".").collect(); // This is to decide wheter we want a folder or specific file
+	
+	log(LogLevel::DEBUG, format!("GET {} for addr {:?}", request.params, peer_ip), &logger);
+
 	if request.params == "/".to_string() {
+		log(LogLevel::DEBUG, format!("Returning main index: {:?}", peer_ip), &logger);
 		match fs::read_to_string(String::from("public/index.html")) {
 			Ok(f) => {
 				file = f;
 			},
 			Err(e) => log(LogLevel::WARN, format!("Index file was not found for {}. Error: {}", peer_ip, e), &logger),
 		}
+	} else if request_extension.len() <= 1 { // Returns index files for non-main folders (e.g: izar.cc/jan) 
+		log(LogLevel::DEBUG, format!("Returning index at {}: {}", request.params, peer_ip), &logger);
+		match fs::read_to_string(format!("public{}/index.html", request.params)) {
+			Ok(f) => {
+				file = f;
+			},
+			Err(e) => log(LogLevel::WARN, format!("Index file was not found for {}. Error: {}", peer_ip, e), &logger),
+		}
 	} else {
+		log(LogLevel::DEBUG, format!("Returning specific file {}: {}", request.params, peer_ip), &logger);
 		match fs::read_to_string(format!("public{}", request.params)) {
 			Ok(f) => {
 				status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");

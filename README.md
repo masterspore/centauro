@@ -19,16 +19,15 @@ Prioritat alta:
 Prioritat mitja:
 - [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
 - [ ] Entendre el codi de threading
-- [ ] Unit tests & integration tests -> **Jan**
-- [ ] Organitzar carpetes del servidor
+- [ ] Unit tests & integration tests
+- [x] ~~Organitzar carpetes del servidor~~
 - [ ] Documentació i definir estàndards de programació.
 
 Prioritat baixa:
 - [x] ~~Comprar domini~~
 - [ ] Implementar DNS dinàmic (Cloudflare?)
 
-# Instalació (Linux)
-
+# Instalació amb SSH (Linux)
 1. Descarregar servidor: 
 '''
 git clone https://github.com/masterspore/centauro
