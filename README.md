@@ -19,7 +19,7 @@ Prioritat alta:
 Prioritat mitja:
 - [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
 - [ ] Entendre el codi de threading
-- [ ] Unit tests & integration tests
+- [ ] Unit tests & integration tests -> **Jan**
 - [ ] Organitzar carpetes del servidor
 - [ ] Documentació i definir estàndards de programació.
 

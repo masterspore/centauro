@@ -39,7 +39,7 @@ pub fn parse_http_request(request: &String) -> Result<HttpRequest, HttpError> {
 	// Also, pattern matching allows for easier code upgrades
 	for line in &lines { 
 		let line_vec: Vec<&str> = line.split_whitespace().collect();
-		println!("Request line: {:?}, length = {:?}", line_vec, line_vec.len());
+		//println!("Request line: {:?}, length = {:?}", line_vec, line_vec.len());
 		if line_vec.len() > 1 {
 			match line_vec[0] {
 				"Host:" => {
