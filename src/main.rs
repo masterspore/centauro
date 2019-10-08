@@ -3,9 +3,9 @@ mod http;
 mod lib;
 mod config;
 mod log;
+mod parser;
 
 // System I/O
-use std::fs;
 use std::io::prelude::*;
 use std::borrow::Cow;
 use std::sync::{mpsc, Mutex, Arc};
@@ -70,84 +70,10 @@ fn handle_connection(mut stream: TcpStream, logger: Arc<Mutex<mpsc::Sender<log::
 		let http_request = http::parse_http_request(&request).unwrap();
 
 		match http_request.method {
-			http::HttpMethod::GET => process_get_request(&http_request, stream, false, logger),
-			http::HttpMethod::HEAD => process_get_request(&http_request, stream, true, logger),
-			//http::HttpMethod::POST => process_post_request(&http_request, stream),
+			http::HttpMethod::GET => parser::process_get_request(&http_request, stream, false, logger),
+			http::HttpMethod::HEAD => parser::process_get_request(&http_request, stream, true, logger),
+			//http::HttpMethod::POST => parser::process_post_request(&http_request, stream),
 			_ => (),
 		}
 	}
 }
-
-/*
-Takes the client's TcpStream and their request, if it's a GET. The function
-returns the file that's being asked for, if it exists.
-Otherwise, it returns a 404.
-*/
-
-fn process_get_request (request: &http::HttpRequest, mut stream: TcpStream, is_head: bool, logger: Arc<Mutex<mpsc::Sender<log::LogMessage>>>) {
-	let mut file = fs::read_to_string(String::from("public/404.html")).unwrap();
-	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
-
-	let peer_ip = stream.peer_addr().unwrap().ip();
-
-	let request_extension: Vec<&str> = request.params.split(".").collect(); // This is to decide wheter we want a folder or specific file
-	
-	log(LogLevel::DEBUG, format!("GET {} for addr {:?}", request.params, peer_ip), &logger);
-
-	if request.params == "/".to_string() {
-		log(LogLevel::DEBUG, format!("Returning main index: {:?}", peer_ip), &logger);
-		match fs::read_to_string(String::from("public/index.html")) {
-			Ok(f) => {
-				file = f;
-			},
-			Err(e) => log(LogLevel::WARN, format!("Index file was not found for {}. Error: {}", peer_ip, e), &logger),
-		}
-	} else if request_extension.len() <= 1 { // Returns index files for non-main folders (e.g: izar.cc/jan) 
-		log(LogLevel::DEBUG, format!("Returning index at {}: {}", request.params, peer_ip), &logger);
-		match fs::read_to_string(format!("public{}/index.html", request.params)) {
-			Ok(f) => {
-				file = f;
-			},
-			Err(e) => log(LogLevel::WARN, format!("Index file was not found for {}. Error: {}", peer_ip, e), &logger),
-		}
-	} else {
-		log(LogLevel::DEBUG, format!("Returning specific file {}: {}", request.params, peer_ip), &logger);
-		match fs::read_to_string(format!("public{}", request.params)) {
-			Ok(f) => {
-				status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
-				file = f;
-			},
-			Err(e) => log(LogLevel::WARN, format!("File {} was not found for {}. Error: {}", request.params, peer_ip, e), &logger),
-		} 
-	}
-
-	let response = if is_head { status_line } else { format!("{}{}", status_line, file) };
-	log(LogLevel::INFO, format!("Sending file {} to {}", request.params, peer_ip), &logger);
-
-	stream.write(response.as_bytes()).unwrap();
-	stream.flush().unwrap();
-}
-
-/*
-Takes a client's TCP stream and the POST request, then parses it.
-*/
-
-/*
-fn process_post_request (request: &http::HttpRequest, mut stream: TcpStream) {
-	let mut file = fs::read_to_string(String::from("public/404.html")).unwrap(); 
-	let mut status_line = String::from("HTTP/1.1 404 NOT FOUND\r\n\r\n");
-
-	let payload: Vec<&str> = request.payload.split("&").collect();
-
-	match fs::read_to_string(format!("public{}", request.params)) {
-		Ok(f) => {
-			status_line = String::from("HTTP/1.1 200 OK\r\n\r\n");
-			file = f;
-		},
-		Err(e) => (),
-	} 
-
-	stream.write(response.as_bytes()).unwrap();
-	stream.flush().unwrap();
-}
-*/

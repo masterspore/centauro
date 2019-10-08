@@ -140,5 +140,5 @@ pub fn log<'a> (level: LogLevel, message: String, sender: &'a Arc<Mutex<mpsc::Se
 	sender.lock().unwrap().send(LogMessage {
 		level,
 		message,
-	});
+	}).unwrap();
 }

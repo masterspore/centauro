@@ -2,7 +2,6 @@ body {
   background-color: #120d1c;
   font-family: 'Roboto Mono', monospace;
   color: #d6cce8;
-  margin: 50px;
 }
 
 h1 {
@@ -30,14 +29,35 @@ a:active {
   text-decoration: none;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .menu {
-	width: 15%;
+	width: 11%;
 	float: left;
 	text-align: right;
-	margin-right: 30px;
+  margin-left: 20px;
 }
 
 .main {
 	width: 85%;
 	float: right;
+  margin-right: 10px; 
+}
+
+.project {
+  max-width: 400px;
+  height: 400px;
+  float: left;
+  margin: 10px;
+}
+
+.project h2 {
+  text-align: center;
+}
+
+#keywords {
+  text-align: center;
+  font-size: 11px;
 }
