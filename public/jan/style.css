@@ -6,6 +6,7 @@ body {
 
 h1 {
   text-align: center;
+  font-weight: bold; 
 }
 
 /* Links */
@@ -27,6 +28,43 @@ a:hover {
 a:active {
   color: #82acd9;
   text-decoration: none;
+}
+
+form {
+  text-align: center;
+}
+
+input {
+  margin: 8px 0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+input[type=password], input[type=text] {
+  border: none;
+  border-bottom: 3px solid #9a86c4;
+  border-radius: 2px;
+  width: 200px;
+  height: 30px;
+  padding: 12px 20px;
+
+  transition: border-bottom 0.1s;
+}
+
+input[type=password]:focus, input[type=text]:focus {
+  border-bottom: 5px solid #82acd9;
+}
+
+input[type=submit] {
+  border: none;
+  border-radius: 2px;
+
+  background-color: #dfc6f7; 
+
+  font-size: 16px;
+  font-weight: bold; 
+
+  width: 100px;
+  height: 30px;
 }
 
 * {

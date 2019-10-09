@@ -13,8 +13,11 @@ Prioritat alta:
 - [x] ~~Funcionalitat bàsica -> Acabar HttpRequest~~
 - [x] ~~Implementació multifil del servidor~~
 - [x] ~~Arreglar http.rs, que el parser tiri~~
-- [ ] Afegir capacitat del servidor per a processar POST a scripts
 - [x] ~~Implementar loggers~~
+- [ ] Implementar TLS i HTTPS
+- [ ] Aconseguir CA
+- [ ] Afegir capacitat del servidor per a processar POST a scripts
+- [ ] Estudiar com implementar cookies/tokens: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
 
 Prioritat mitja:
 - [x] ~~Afegir funcionalitat per a fer servir un arxiu de configuració~~
@@ -22,9 +25,11 @@ Prioritat mitja:
 - [ ] Unit tests & integration tests
 - [x] ~~Organitzar carpetes del servidor~~
 - [ ] Documentació i definir estàndards de programació.
+- [ ] Crear script d'instalació
 
 Prioritat baixa:
 - [x] ~~Comprar domini~~
+- [ ] Implementar 2FA pel dashboard
 - [ ] Implementar DNS dinàmic (Cloudflare?)
 
 # Instalació amb SSH (Linux)
