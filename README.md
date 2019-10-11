@@ -69,4 +69,4 @@ sudo ./simple_server &
 És important comentar cada funció què fa. També s'han d'implementar unit tests i tests d'integració.
 
 # Estàndards de programació
-Pels colors de l'estil de mumuki.dev estic utilitzant la paleta següent: https://colorhunt.co/palette/153796
+Peels colors de l'estil de mumuki.dev estic utilitzant la paleta següent: https://colorhunt.co/palette/153796
